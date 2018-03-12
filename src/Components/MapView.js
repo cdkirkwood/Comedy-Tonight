@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react'
 import { connect } from 'react-redux';
-
-const google = window.google;
+import { Link } from 'react-router-dom';
+import { dateConverter } from '../dateConverter';
+import history from '../history';
 
 export class MapView extends Component {
 
@@ -18,18 +19,15 @@ export class MapView extends Component {
     this.onMapClicked = this.onMapClicked.bind(this);
   }
   
-  onMarkerClick() {
-    (props, marker, e) => {
+  onMarkerClick(props, marker, e) {
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
       showingInfoWindow: true
     });
-  }
 }
 
-onMapClicked()  {
-  props => {
+onMapClicked(props)  {
   if (this.state.showingInfoWindow) {
     this.setState({
       showingInfoWindow: false,
@@ -37,14 +35,9 @@ onMapClicked()  {
     })
   }
 }
-}
   render() {
     const events = this.props.events;
-    if (this.props.events) {
-      if (this.props.events.length) {
-        console.log(events[0].venue.latitude)
-      }
-    }
+    const place = this.state.selectedPlace
     // let coords = []
     // navigator.geolocation.getCurrentPosition(position => {
     //   coords.push(position.coords.latitude)
@@ -66,6 +59,7 @@ onMapClicked()  {
     return (
       <div>
         <Map
+          zoom={12}
           google={this.props.google}
           onClick={this.onMapClicked}
           style={style}
@@ -78,9 +72,13 @@ onMapClicked()  {
           events.map(event => {
           if (event.venue) {
           return (<Marker
-            onClick={this.onMarkerClicked}
-            title={event.name}
-            name={event.name}
+            key={event.id}
+            onClick={this.onMarkerClick}
+            title={event.name.text}
+            name={event.name.text}
+            date={dateConverter(event.start.local)}
+            venue={event.venue ? event.venue.name: null}
+            id={event.id}
             position={{ lat: event.venue.latitude, lng: event.venue.longitude }} />
           )}
           }
@@ -89,7 +87,12 @@ onMapClicked()  {
         marker={this.state.activeMarker}
         visible={this.state.showingInfoWindow}>
           <div>
-            <h1>{this.state.selectedPlace.name}</h1>
+            <h3>{place.name}</h3>
+            <h3>{place.date}</h3>
+            {place.venue ?
+              <h3>{`Venue: ${place.venue}`}</h3>
+              : <h3 />
+            }
           </div>
       </InfoWindow>
         </Map>
@@ -104,3 +107,7 @@ const mapState = state => ({ events: state.events });
 export default connect(mapState)(GoogleApiWrapper({
   apiKey: 'AIzaSyAyesbQMyKVVbBgKVi2g6VX7mop2z96jBo'
 }, )(MapView))
+
+// <NavLink to={`/events/${place.id}`}>
+//              <h3>{place.name}</h3>
+//             </NavLink>
