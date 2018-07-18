@@ -7,12 +7,12 @@ import { Link } from 'react-router-dom';
 const AllEvents = (props) => {
   const events = props.events;
   return events && events.length ?
-  events.map((event, index) => {
+  events.map((event) => {
     let description;
-    event.description.text ?
-    description = event.description.text.slice(0, 750)
+    description = event.description.text ?
+    event.description.text.slice(0, 750)
     : event.description.text
-    return(
+    return (
   <Panel bsStyle="info" key={event.id}>
     <Panel.Heading>
       <Link to={`/events/${event.id}`}>

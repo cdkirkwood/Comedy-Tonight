@@ -1,4 +1,0 @@
-{
-  "extends": "fullstack",
-  "parser": "babel-eslint"
-}
