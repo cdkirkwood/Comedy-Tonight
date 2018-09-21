@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from 'axios'
+const eventBriteToken = process.env.REACT_APP_EVENT_OAUTH_TOKEN
 
 //Action Types
 const GET_EVENTS = 'GET_EVENTS';
@@ -12,13 +13,13 @@ export const getEvents = events => {
 //Thunk Creators
 export const fetchEvents = (latitude, longitude) => async(dispatch) => {
   const first = await axios.get(
-    `https://www.eventbriteapi.com/v3/events/search/?subcategories=4007&location.within=10mi&location.latitude=${latitude}&location.longitude=${longitude}&expand=venue&token=AWXQ6FOPFWLQBPAIORNZ`
+    `https://www.eventbriteapi.com/v3/events/search/?subcategories=4007&location.within=10mi&location.latitude=${latitude}&location.longitude=${longitude}&expand=venue&token=${eventBriteToken}`
 )
   let events = first.data.events;
   const count = first.data.pagination.page_count;
   for (let i = 2; i <= count; i++) {
   const next = await axios.get(
-      `https://www.eventbriteapi.com/v3/events/search/?subcategories=4007&location.within=10mi&location.latitude=${latitude}&location.longitude=${longitude}&page=${i}&token=AWXQ6FOPFWLQBPAIORNZ`
+      `https://www.eventbriteapi.com/v3/events/search/?subcategories=4007&location.within=10mi&location.latitude=${latitude}&location.longitude=${longitude}&page=${i}&token=${eventBriteToken}`
     )
   events = events.concat(next.data.events);
   }
