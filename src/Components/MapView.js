@@ -38,17 +38,6 @@ onMapClicked(props)  {
   render() {
     const events = this.props.events;
     const place = this.state.selectedPlace
-    // let coords = []
-    // navigator.geolocation.getCurrentPosition(position => {
-    //   coords.push(position.coords.latitude)
-    //   coords.push(position.coords.longitude)
-    //   //return coords;
-    // })
-    // console.log(coords);
-
-    //const latitude = navigator.geolocation.getCurrentPosition()[0];
-    //const longitude = navigator.geolocation.getCurrentPosition()[1];
-
     const style = {
       width: '75%',
       height: '75%'
@@ -107,7 +96,3 @@ const mapState = state => ({ events: state.events });
 export default connect(mapState)(GoogleApiWrapper({
   apiKey: 'AIzaSyAyesbQMyKVVbBgKVi2g6VX7mop2z96jBo'
 }, )(MapView))
-
-// <NavLink to={`/events/${place.id}`}>
-//              <h3>{place.name}</h3>
-//             </NavLink>
